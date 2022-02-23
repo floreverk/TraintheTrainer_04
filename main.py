@@ -1,24 +1,15 @@
-#######################################################################################################################
-# A. Importeer csv (uit adlib) naar dataframe (pandas)
-
-# pip install pandas
 import pandas as pd
+from openpyxl import Workbook
+from openpyxl.utils.dataframe import dataframe_to_rows
+from openpyxl.chart import BarChart3D, Reference
 
 # inlezen csv
 # ingeven padnaam naar csv, en indien van toepassing aanvullen delimiter
-lijst = pd.read_csv(r"padnaam\bestandsnaam.extensie", delimiter=';')
+lijst = pd.read_csv(r"ttt4.csv", delimiter=';')
 print(lijst)
-
-#######################################################################################################################
-# B. Maak lijsten met ontbrekende velden
-# 1. Selecteer ontbrekende velden (via pandas)
-# 1.1 Objectnaam
 
 # identificeer wanneer objectnaam 'leeg' is
 ontbrekende_objectnaam = pd.isna(lijst['objectnaam'])
-print(ontbrekende_objectnaam)
-
-# hou vanuit de lijst enkel de records over waarbij objectnaam leeg = true was
 ontbrekende_objectnaam = lijst[ontbrekende_objectnaam]
 print(ontbrekende_objectnaam)
 
@@ -26,36 +17,39 @@ print(ontbrekende_objectnaam)
 
 ontbrekende_titel = pd.isna(lijst['titel'])
 ontbrekende_titel = lijst[ontbrekende_titel]
+print(ontbrekende_titel)
 
 # 1.3 Beschrijving
 
 ontbrekende_beschrijving = pd.isna(lijst['beschrijving'])
 ontbrekende_beschrijving = lijst[ontbrekende_beschrijving]
+print(ontbrekende_beschrijving)
 
 # 1.4 Vervaardiger
 
 ontbrekende_vervaardiger = pd.isna(lijst['vervaardiger'])
 ontbrekende_vervaardiger = lijst[ontbrekende_vervaardiger]
+print(ontbrekende_vervaardiger)
+
+ontbrekende_vervaardiger_rol = pd.isna(lijst['vervaardiger.rol'])
+ontbrekende_vervaardiger_rol = lijst[ontbrekende_vervaardiger_rol]
+print(ontbrekende_vervaardiger_rol)
+
+ontbrekende_vervaardiger_plaats = pd.isna(lijst['vervaardiging.plaats'])
+ontbrekende_vervaardiger_plaats = lijst[ontbrekende_vervaardiger_plaats]
+print(ontbrekende_vervaardiger_plaats)
 
 # 1.5 Datering
 
-ontbrekende_datering = pd.isna(lijst['vervaardiging.datum.begin'])
-ontbrekende_datering = lijst[ontbrekende_datering]
+ontbrekende_datering_begin = pd.isna(lijst['vervaardiging.datum.begin'])
+ontbrekende_datering_begin = lijst[ontbrekende_datering_begin]
+print(ontbrekende_datering_begin)
 
-#######################################################################################################################
-# B. Maak lijsten met ontbrekende velden
-# 2. Output (excel) maken met lijsten met ontbrekende velden (via openpyxl)
+ontbrekende_datering_eind = pd.isna(lijst['vervaardiging.datum.eind'])
+ontbrekende_datering_eind = lijst[ontbrekende_datering_eind]
+print(ontbrekende_datering_eind)
 
-# pip install openpyxl
-from openpyxl import Workbook
-
-# maak een excel aan
 wb = Workbook()
-
-# voeg een sheet toe met ontbrekende velden
-# 2.1 objectnaam
-
-from openpyxl.utils.dataframe import dataframe_to_rows
 
 # maak sheet (tabblad)
 ws = wb.create_sheet("Objectnaam")
@@ -65,20 +59,11 @@ for r_idx, row in enumerate(rows, 1):
     for c_idx, value in enumerate(row, 1):
         ws.cell(row=r_idx, column=c_idx, value=value)
 
-# sla excel op
-wb.save(r"C:\Users\Verkesfl\PycharmProjects\pythonProject\TraintheTrainer_04\output.xlsx")
-
-# 2.2 titel
-
 ws = wb.create_sheet("Titel")
 rows = dataframe_to_rows(ontbrekende_titel, index=False)
 for r_idx, row in enumerate(rows, 1):
     for c_idx, value in enumerate(row, 1):
         ws.cell(row=r_idx, column=c_idx, value=value)
-
-wb.save(r"C:\Users\Verkesfl\PycharmProjects\pythonProject\TraintheTrainer_04\output.xlsx")
-
-# 2.3 beschrijving
 
 ws = wb.create_sheet("Beschrijving")
 rows = dataframe_to_rows(ontbrekende_beschrijving, index=False)
@@ -86,92 +71,79 @@ for r_idx, row in enumerate(rows, 1):
     for c_idx, value in enumerate(row, 1):
         ws.cell(row=r_idx, column=c_idx, value=value)
 
-wb.save(r"C:\Users\Verkesfl\PycharmProjects\pythonProject\TraintheTrainer_04\output.xlsx")
-
-# 2.4 vervaardiger
-
 ws = wb.create_sheet("Vervaardiger")
 rows = dataframe_to_rows(ontbrekende_vervaardiger, index=False)
 for r_idx, row in enumerate(rows, 1):
     for c_idx, value in enumerate(row, 1):
         ws.cell(row=r_idx, column=c_idx, value=value)
 
-wb.save(r"C:\Users\Verkesfl\PycharmProjects\pythonProject\TraintheTrainer_04\output.xlsx")
-
-# 2.5 datering
-
-ws = wb.create_sheet("Datering")
-rows = dataframe_to_rows(ontbrekende_datering, index=False)
+ws = wb.create_sheet("Vervaardigerrol")
+rows = dataframe_to_rows(ontbrekende_vervaardiger_rol, index=False)
 for r_idx, row in enumerate(rows, 1):
     for c_idx, value in enumerate(row, 1):
         ws.cell(row=r_idx, column=c_idx, value=value)
 
-wb.save(r"C:\Users\Verkesfl\PycharmProjects\pythonProject\TraintheTrainer_04\output.xlsx")
+ws = wb.create_sheet("Vervaardigingplaats")
+rows = dataframe_to_rows(ontbrekende_vervaardiger_plaats, index=False)
+for r_idx, row in enumerate(rows, 1):
+    for c_idx, value in enumerate(row, 1):
+        ws.cell(row=r_idx, column=c_idx, value=value)
 
-#######################################################################################################################
-# C. visualisatie van de data
+ws = wb.create_sheet("Dateringbegin")
+rows = dataframe_to_rows(ontbrekende_datering_begin, index=False)
+for r_idx, row in enumerate(rows, 1):
+    for c_idx, value in enumerate(row, 1):
+        ws.cell(row=r_idx, column=c_idx, value=value)
+
+ws = wb.create_sheet("Dateringeind")
+rows = dataframe_to_rows(ontbrekende_datering_eind, index=False)
+for r_idx, row in enumerate(rows, 1):
+    for c_idx, value in enumerate(row, 1):
+        ws.cell(row=r_idx, column=c_idx, value=value)
+
+wb.save(r"C:\Users\teugelso\PycharmProjects\pythonProject\TraintheTrainer_04\output.xlsx")
+
 # 1. tellen van de data (pandas)
 
 # tel aantal keer objectnummer aanwezig is in lijst records zonder objectnamen (gezien objectnummer altijd aanwezig)
 ontbrekende_objectnamen = ontbrekende_objectnaam['objectnummer'].count()
-print(ontbrekende_objectnamen)
 # doe hetzelfde voor de overige velden
 ontbrekende_titels = ontbrekende_titel['objectnummer'].count()
-print(ontbrekende_titels)
 ontbrekende_beschrijvingen = ontbrekende_beschrijving['objectnummer'].count()
 ontbrekende_vervaardigers = ontbrekende_vervaardiger['objectnummer'].count()
-ontbrekende_dateringen = ontbrekende_datering['objectnummer'].count()
+ontbrekende_dateringen_begin = ontbrekende_datering_begin['objectnummer'].count()
+ontbrekende_dateringen_eind = ontbrekende_datering_eind['objectnummer'].count()
+ontbrekende_vervaardigers_rol = ontbrekende_vervaardiger_rol['objectnummer'].count()
+ontbrekende_vervaardigers_plaats = ontbrekende_vervaardiger_plaats['objectnummer'].count()
 
-#######################################################################################################################
-# C. visualisatie van de data
-# 2. weergeven van de data in grafiek in excel (openpyxl)
+print(ontbrekende_vervaardigers)
 
-# 2.1 voeg de data toe in excel
-# zet de data in een list
-labels = ["objectnaam", "titel", "beschrijving", "vervaardiger", "datering"]
-ontbrekende_data = [ontbrekende_objectnamen, ontbrekende_titels, ontbrekende_beschrijvingen, ontbrekende_vervaardigers,
-                    ontbrekende_dateringen]
-
-# voeg de list toe aan de excel (openpyxl)
-
+labels = ["objectnaam", "titel", "beschrijving", "vervaardiger", "vervaardigerrol", "vervaardigingplaats", "dateringbegin", "dateringeind"]
+ontbrekende_data = [ontbrekende_objectnamen, ontbrekende_titels, ontbrekende_beschrijvingen, ontbrekende_vervaardigers, ontbrekende_vervaardigers_rol, ontbrekende_vervaardigers_plaats,
+                    ontbrekende_dateringen_begin, ontbrekende_dateringen_eind]
 ws = wb.active
 ws.title = 'Info'
-# titel lijst
 ws['A1'] = "Ontbrekende velden"
-wb.save(r"C:\Users\Verkesfl\PycharmProjects\pythonProject\TraintheTrainer_04\output.xlsx")
-
-# de labels
 rij1 = 2
 for label in labels:
     ws.cell(row=rij1, column=1).value = label
     rij1 += 1
-wb.save(r"C:\Users\Verkesfl\PycharmProjects\pythonProject\TraintheTrainer_04\output.xlsx")
-
-# de waardes
 rij2 = 2
 for veld in ontbrekende_data:
     ws.cell(row=rij2, column=2).value = veld
     rij2 += 1
-wb.save(r"C:\Users\Verkesfl\PycharmProjects\pythonProject\TraintheTrainer_04\output.xlsx")
-
-# 2.2 maak de grafiek in excel
-
-from openpyxl.chart import BarChart3D, Reference
-
 # selecteer de data
-data = Reference(ws, min_col=2, min_row=2, max_col=2, max_row=6)
+data = Reference(ws, min_col=2, min_row=2, max_col=2, max_row=8)
 
 # selecteer de labels
-labels = Reference(ws, min_col=1, min_row=2, max_col=1, max_row=6)
+labels = Reference(ws, min_col=1, min_row=2, max_col=1, max_row=8)
 
 # creeer grafiek
 chart = BarChart3D()
 
 # voeg grafiek toe aan excel
 ws.add_chart(chart, "E2")
-wb.save(r"C:\Users\Verkesfl\PycharmProjects\pythonProject\TraintheTrainer_04\output.xlsx")
 
-# voeg titel toe
 chart.title = 'Ontbrekende data'
 
 # voeg namen x en y as toe
@@ -182,5 +154,4 @@ chart.x_axis.title = 'velden'
 chart.add_data(data)
 chart.set_categories(labels)
 
-# sla excel op
-wb.save(r"C:\Users\Verkesfl\PycharmProjects\pythonProject\TraintheTrainer_04\output.xlsx")
+wb.save(r"C:\Users\teugelso\PycharmProjects\pythonProject\TraintheTrainer_04\output.xlsx")
